@@ -1,0 +1,190 @@
+### Factual Pilot Experiment 
+### Last Edit: 07.03.2017
+### Author: Daniel Cortez Stevenson
+### Questions or comments? Contact: [daniel.stevenson@charite.de]
+
+#-------------------------------------------------------------------
+### Request experimenter input for Run # (1, 2, 3, or 4) ###
+preset int run_nummer;
+
+### Set timing of stimuli here: ###
+
+# Set duration of possible jitter events (ms)
+array<int> jitters[5] = {4000, 4500, 5000, 5500, 6000};
+
+# Set stimulus picture duration (ms)
+int stim_dur = 3000;
+ab1.set_delta_time(stim_dur);
+
+# Set 1. abfrage duration (ms)
+int ab1_dur = 3000;
+ab_fix.set_delta_time(ab1_dur);
+
+# Currently can NOT set 2. abfrage duration, it waits for a user response.
+
+# Set feedback picture duration (ms)
+int feedback_dur = 2000;
+feedback_event.set_duration(feedback_dur);
+
+### Randomization of Trials Initialization ###
+# Open randomization order .txt file according to input run_nummer.
+input_file random_data = new input_file; 
+ 
+if 		(run_nummer == 1) then														
+	random_data.open("../Task_Randomization_Orders/pilot_randomization_1.txt");										
+elseif	(run_nummer == 2) then							
+	random_data.open("../Task_Randomization_Orders/pilot_randomization_2.txt"); 
+elseif 	(run_nummer == 3) then				
+	random_data.open("../Task_Randomization_Orders/pilot_randomization_3.txt");
+elseif  	(run_nummer == 4) then	
+	random_data.open("../Task_Randomization_Orders/pilot_randomization_4.txt");
+end; 
+
+# Randomize order of stimuli based on input .txt file
+array <int> bilder[60]; 
+loop 
+	int data_value = 1
+until
+	data_value > 60
+begin
+	bilder[data_value] = random_data.get_int();
+	data_value = data_value + 1;
+end;
+
+### Initialize Behavioral Log File ###
+output_file ofile = new output_file;
+string ofilename = "../Behavioral_Log_Files/s1_factual_pilot_" + logfile.subject() + ".csv";
+ofile.open(ofilename, file_append, true);
+ofile.print("Task_Name, VPN, Run, Trial, Date, Time, Stim_ID, " + 
+				"Stim_Onset(ms_since_trigger), Q1_ID, Q1_Onset, Q1_Ans, " +
+				"Q2_ID, Q2_Onset, Q2_Rev, Feedback_ID, Feedback_Onset, " +
+				"Q2_Button, Q2_Resp, Q2_RT\n");
+
+#---- fmri trigger setzen ---------------------------
+int trigger = 5;		
+
+Cue_Bed.present();         # instruction for 8 s
+
+#---- fmri wartet bis trigger = 5 (8 s) ------------
+
+loop until (pulse_manager.main_pulse_count() >= trigger)
+	begin
+	end; 
+ 
+# -----------------------------------------------------------------
+# Begin Experiment
+# -----------------------------------------------------------------
+
+loop				# Begin trial loop
+	int t = 1
+until
+	t > 60
+begin	
+	# Select Jitter Time from available jitter times 
+	int jit_ind = random(1,jitters.count()); 
+	int jit = jitters[jit_ind];
+	# Set Jitter Time
+	stim_event.set_delta_time(jit);
+	string jitter_event_code = "jit_" + string(jit);
+	Vorb.set_event_code(jitter_event_code);
+	
+	# Set Stimulus trial event code as filename & Set stimulus picture
+	# Get picture file name
+	string stimulus_fname = stimulus_bilder[bilder[t]].filename();
+	# Remove the directory
+	stimulus_fname = stimulus_fname.replace( stimulus_directory, "" );
+	stim_event.set_event_code(stimulus_fname);
+	# Set Stimulus picture
+	stim_bild.set_part(1, stimulus_bilder[bilder[t]]);
+	
+	# Set Abfrage 1 Event Code as Filename & Set Abfrage 1 image
+	string abfrage1_fname = erste_abfragen[bilder[t]].filename();
+	abfrage1_fname = abfrage1_fname.replace(stimulus_directory, "" );
+	ab1.set_event_code(abfrage1_fname);
+	# Set Abfrage1 image
+	ab1_bild.set_part(1, erste_abfragen[bilder[t]]);
+	
+	# Set Abfrage 2 as 'reversed (1)' or 'normal (0)', set Abfrage 2 image.
+	int rev = random(0,1); 
+	string abfrage2_fname;
+	if (rev == 0) then
+		abfrage2_fname = abfrage2.filename();
+		ab2_bild.set_part(1, abfrage2);
+	elseif (rev == 1) then 
+		abfrage2_fname = abfrage2r.filename();
+		ab2_bild.set_part(1, abfrage2r); 
+	end;
+	# Set abfrage 2 image
+	abfrage2_fname = abfrage2_fname.replace(stimulus_directory, "");
+	ab2.set_event_code(abfrage2_fname);
+	
+	# Set Feedback event code as filename & Set Feedback picture
+	string feedback_fname = feedback_bilder[bilder[t]].filename();
+	feedback_fname = feedback_fname.replace( stimulus_directory, "");
+	feedback_event.set_event_code(feedback_fname);
+	feedback_bild.set_part(1, feedback_bilder[bilder[t]]);
+	
+	# Get Date and Time
+	string stim_cal = date();
+	string stim_clock = date_time("tt");
+	
+	### MAIN PRESENTATION COMMAND ###   
+	full_trial.present();
+	
+	# Get Response value (may be reverse coded depending on abfrage 2)
+	int button_press = response_manager.last_response_data().button();
+	string abfrage2_resp;
+	if (rev == 0) then
+		abfrage2_resp = string(button_press);
+	elseif (rev == 1) then 
+		abfrage2_resp = string(5 - button_press);
+	end;
+	
+	# Set rausschreib text & present rausschreib. pict_id must be used due to 
+	# filename containing '_'.
+	string pict_id = stimulus_fname.replace( ".jpg", "" ); 
+	pict_id = pict_id.replace( "_", "" ); 
+	string schreib_code =	"B" + 
+									"_pict_" + pict_id +
+									"_correctAnswer_" + erste_abfragen[bilder[t]].description() +
+									"_abfragetyp_" + string(rev) + 
+									"_button_" + string(button_press) +
+									"_response_" + abfrage2_resp;
+	schreib.set_event_code(schreib_code);
+	rausschreib.present();
+	
+	# Get Stim Data for RT and approximate Stimulus Bild Presentation Time
+	stimulus_data stim_data = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count() - 5);
+	stimulus_data ab1_data = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count() - 4);
+	stimulus_data ab2_data = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count() - 2);
+	stimulus_data feedback_data = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count() - 1);
+	
+	# Write Trial Data to Behavioral Log File
+	ofile.print("S1_Factual_Pilot, " + 
+					logfile.subject() + ", " + 
+					string(run_nummer) + ", " + 
+					string(t) + ", " + 
+					stim_cal + ", " + 
+					stim_clock + ", " + 
+					stimulus_fname + ", " + 
+					string(stim_data.time() - 8000) + ", " +
+					abfrage1_fname + ", " +
+					string(ab1_data.time() - 8000) + ", " +
+					erste_abfragen[bilder[t]].description() + ", " + 
+					abfrage2_fname + ", " +
+					string(ab2_data.time() - 8000) + ", " +
+					string(rev) + ", " + 
+					feedback_fname + ", " +
+					string(feedback_data.time() - 8000) + ", " +
+					string(button_press) + ", " +
+					abfrage2_resp + ", " + 
+					string(ab2_data.reaction_time()) + "\n");
+			
+	t = t + 1; #iterate trial
+end;						# End Trial Loop #
+
+# Close Behavioral Log File
+ofile.close();    
+
+# Present fixation cross for 10 sec and say "Danke!"
+ende.present();
