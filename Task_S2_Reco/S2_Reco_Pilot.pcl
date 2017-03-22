@@ -76,8 +76,8 @@ begin
 	full_trial.present();
 	
 	# Get Button Press
-	int button_press = response_manager.last_response_data().button();
-	
+	int button_press = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count()).button();
+
 	# Get the correct button answer: 1 if alt, 2 if neu
 	# Record response 'alt' or 'neu' 
 	int correct_answer;

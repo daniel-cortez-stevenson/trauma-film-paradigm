@@ -1,5 +1,5 @@
 <ver>19</ver>
-<efn>Z:\medical_neuroscience\repantis_lab\Pilot_Tasks\Task_S2_Reco\S2_Reco_Pilot.exp</efn>
+<efn>Z:\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.exp</efn>
 <author>Daniel Stevenson with support from Simone Kuehn, Dimitri Repantis, Katharina Wermuth, and Katharina Schmalen </author>
 <con>
 <pause>P</pause>
@@ -39,11 +39,11 @@
 <lfn></lfn>
 </docs>
 <dp_list></dp_list>
-<dsd>Z:\medical_neuroscience\repantis_lab\Pilot_Tasks\Task_Stimuli</dsd>
+<dsd>Z:\medneuro\repantis_lab\pilot_tasks\Task_Stimuli</dsd>
 <dxv>8</dxv>
 <efs>
-<filename>Z:\medical_neuroscience\repantis_lab\Pilot_Tasks\Task_S2_Reco\S2_Reco_Pilot.sce</filename>
-<filename>Z:\medical_neuroscience\repantis_lab\Pilot_Tasks\Task_S2_Reco\S2_Reco_Pilot.pcl</filename>
+<filename>Z:\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.sce</filename>
+<filename>Z:\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.pcl</filename>
 </efs>
 <exclusive_mouse>1</exclusive_mouse>
 <exp_version>1</exp_version>
@@ -86,7 +86,7 @@
 </ssa>
 </man>
 </exparam>
-<experiment_id>{B70E8B64-71AF-4E57-9018-1B18500FDAE5}</experiment_id>
+<experiment_id>{5C3E5EC4-4B8C-4FA4-9471-E6E027981D72}</experiment_id>
 <font_settings>
 <dpi>96</dpi>
 <font_smooth>1</font_smooth>
@@ -118,7 +118,7 @@
 <idt>0</idt>
 <ilc>0</ilc>
 <ip_chans></ip_chans>
-<lfd>Z:\medical_neuroscience\repantis_lab\Pilot_Tasks\Presentation_Log_Files</lfd>
+<lfd>Z:\medneuro\repantis_lab\pilot_tasks\Presentation_Log_Files</lfd>
 <lnb>0</lnb>
 <lno>3</lno>
 <log>
@@ -433,7 +433,7 @@
 <offset>3</offset>
 </idv>
 <overrides></overrides>
-<sfn>Z:\medical_neuroscience\repantis_lab\Pilot_Tasks\Task_S2_Reco\S2_Reco_Pilot.sce</sfn>
+<sfn>Z:\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.sce</sfn>
 </sce>
 <sct>
 <capture_device>
@@ -512,4 +512,4 @@
 <unc></unc>
 <upb>0</upb>
 <urp>0</urp>
-<wob>1</wob>
+<wob>0</wob>

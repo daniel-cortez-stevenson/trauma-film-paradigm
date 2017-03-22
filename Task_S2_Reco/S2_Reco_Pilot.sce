@@ -175,7 +175,7 @@ trial {
 		response_active = true;
 		target_button = 1, 2;
 		delta_time = 5000;
-		duration = response;
+		duration = 2000;
 		code = "stimulus bild filename"; 
    } stim_event;   
    
