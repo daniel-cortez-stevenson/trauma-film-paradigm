@@ -16,6 +16,9 @@ loop until (pulse_manager.main_pulse_count() == trigger)
  begin
  end;     
 
+#Double vid size
+vid1.prepare();
+vid1.set_size( vid1.width() * 1.8, vid1.height() * 1.8);
 
 ### Video Presentation ###
 main_video.present();    
