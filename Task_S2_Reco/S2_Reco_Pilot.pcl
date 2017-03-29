@@ -26,7 +26,7 @@ ofile.open(ofilename, file_append, true);
 ofile.print("Task_Name, VPN, Run, Trial, Date, Time, Stim_ID, " + 
 				"Stim_Onset(ms_since_trigger), Q1_ID, Q1_Onset, Q1_Ans, " +
 				"Q2_ID, Q2_Onset, Q2_Rev, Feedback_ID, Feedback_Onset, " +
-				"Q2_Button, Response, RT\n");
+				"Q2_Button, Correct, RT\n");
                                                                         
 #---- fmri trigger setzen ---------------------------
 
@@ -81,13 +81,18 @@ begin
 	# Get the correct button answer: 1 if alt, 2 if neu
 	# Record response 'alt' or 'neu' 
 	int correct_answer;
-	string stim_resp;
 	if (stimulus_bilder[bilder[t]].description() == "alt")then
 		correct_answer = 1;
-		stim_resp = "alt"
 	elseif (stimulus_bilder[bilder[t]].description() == "neu")then
-		correct_answer = 2;
-		stim_resp = "neu";
+		correct_answer = 2;	
+	end;
+	
+	# Determine Correct or Incorrect
+	int correct;
+	if (correct_answer == button_press) then
+		correct = 1;
+	else
+		correct = 0;
 	end;
 	
 	# Set rausschreib text & present rausschreib. pict_id must be used due to 
@@ -124,7 +129,7 @@ begin
 					"None" + ", " +
 					"NaN" + ", " +
 					string(button_press) + ", " +
-					stim_resp + ", " + 
+					string(correct) + ", " + 
 					string(stim_data.reaction_time()) + "\n");
 					
 	t = t + 1; #iterate trial
