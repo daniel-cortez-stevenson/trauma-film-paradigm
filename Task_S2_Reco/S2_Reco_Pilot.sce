@@ -1,5 +1,4 @@
 ### Recognition Pilot Experiment
-### Last Edit: 07.03.2017
 ### Author: Daniel Cortez Stevenson
 ### Questions or comments? Contact: [daniel.stevenson@charite.de]
 
@@ -12,8 +11,8 @@ button_codes = 1, 2;
 
 ### Response Logging Options
 #no_logfile = true; #Turn on/off presentation log file creation.
-response_matching = simple_matching;    
-response_logging = log_active; 
+response_matching = simple_matching;
+response_logging = log_active;
 
 ### Monitor View Settings
 default_background_color = 0, 0, 0;
@@ -26,27 +25,27 @@ max_y = 100;
 
 # ---- fmri header ----
 
-# for simulation   
+# for simulation
 scenario_type = fMRI_emulation;
 scan_period = 2000;     # = TR
 
 # for fMRI
-#scenario_type = fMRI;  
+#scenario_type = fMRI;
 
 # for both
 pulses_per_scan = 1;
 pulse_code = 99;
 
-begin;   
+begin;
 
 # ---- Load Stimuli ----
 # Default
 picture{bitmap{ filename = "fix.jpg";height = 200; scale_factor = scale_to_height;}; x = 0; y = 0;} default;	#fix
 
-# Instructions, Fixation Cross, Blank, & Warning Screens   
-bitmap{ filename = "recognition_instrukt.bmp"; height = 200; scale_factor = scale_to_height;} 	instrukt;	#instructions	
+# Instructions, Fixation Cross, Blank, & Warning Screens
+bitmap{ filename = "recognition_instrukt.bmp"; height = 200; scale_factor = scale_to_height;} 	instrukt;	#instructions
 bitmap{ filename = "fix.jpg";			height = 200; scale_factor = scale_to_height;}	fix;			#fixation cross
- 
+
 # Load Stimuli Bilder into a list.
 
 ## Stimulus Bilder
@@ -142,17 +141,17 @@ array {
 # Trials
 # ------
 
-trial { 
+trial {
    trial_duration = 5000;
 
-   stimulus_event{		
+   stimulus_event{
 		picture {
 			bitmap instrukt;
 			x = 0; y = 0;
-		} ;	
+		} ;
 		time = 0;
 		code = "Bedingung";
-		duration = next_picture; 
+		duration = next_picture;
    } instruktion;
 
 } Cue_Bed;
@@ -160,14 +159,18 @@ trial {
 # TRIAL LOOP SCREENS
 trial {
 	all_responses = false;
-	
-	stimulus_event{       	
-		picture default;
+	trial_duration = 7000;
+
+	stimulus_event{
+		picture {
+			bitmap fix;
+			x = 0; y = 0;
+		} vorb_fix;
 		time = 0;
-		duration = next_picture; 
+		duration = next_picture;
    } Vorb;
 
-	stimulus_event{  
+	stimulus_event{
 		picture {
 			bitmap fix;
 			x = 0; y = 0;
@@ -175,41 +178,41 @@ trial {
 		response_active = true;
 		target_button = 1, 2;
 		delta_time = 5000;
-		duration = 2000;
-		code = "stimulus bild filename"; 
-   } stim_event;   
-   
+		duration = response;
+		code = "stimulus bild filename";
+   } stim_event;
+
 } full_trial;
-   
+
 trial{
 	trial_duration = 1;
-	stimulus_event {  
+	stimulus_event {
       picture default;
       code = "rausschreib";
 		time = 0;
-      duration = next_picture; 
+      duration = next_picture;
 	} schreib;
-} rausschreib;  
-        
-# END OF EXPERIMENT SCREENS            
-trial { 
-   
-   stimulus_event{       	
+} rausschreib;
+
+# END OF EXPERIMENT SCREENS
+trial {
+
+   stimulus_event{
 		picture {
 			bitmap fix;
 			x = 0; y = 0;
 		} ;
 		time = 0;
-		duration = next_picture; 
+		duration = next_picture;
 		code = "ende_fixation";
    } ende_fix;
-   
-   stimulus_event{ 
+
+   stimulus_event{
 		picture {
 			text {
 				caption = "E N D E ! VIELEN DANK!";
 				font_size = 20;
-				font_color = 255, 255, 255; 
+				font_color = 255, 255, 255;
 			};
 			x = 0; y = 0;
 		} ende_text;
@@ -218,4 +221,4 @@ trial {
 		code = "ende_danke_screen";
    } ende_danke;
 
-} ende;  
+} ende;
