@@ -1,5 +1,4 @@
-### Recognition Pilot Experiment 
-### Last Edit: 07.03.2017
+### Recognition Pilot Experiment
 ### Author: Daniel Cortez Stevenson
 ### Questions or comments? Contact: [daniel.stevenson@charite.de]
 
@@ -16,21 +15,21 @@ array<int> jitters[5] = {5000, 5500, 6000, 6500, 7000};
 array <int> bilder[80] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
 	21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,
 	41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,
-	61,62,63,64,65,66,67,68,69,10,71,72,73,74,75,76,77,78,79,80}; 
+	61,62,63,64,65,66,67,68,69,10,71,72,73,74,75,76,77,78,79,80};
 bilder.shuffle();
 
 ### Initialize Behavioral Log File ###
 output_file ofile = new output_file;
 string ofilename = "../Behavioral_Log_Files/s2_recognition_pilot_" + logfile.subject() + ".csv";
 ofile.open(ofilename, file_append, true);
-ofile.print("Task_Name, VPN, Run, Trial, Date, Time, Stim_ID, " + 
+ofile.print("Task_Name, VPN, Run, Trial, Date, Time, Stim_ID, " +
 				"Stim_Onset(ms_since_trigger), Q1_ID, Q1_Onset, Q1_Ans, " +
 				"Q2_ID, Q2_Onset, Q2_Rev, Feedback_ID, Feedback_Onset, " +
 				"Q2_Button, Correct, RT\n");
-                                                                        
+
 #---- fmri trigger setzen ---------------------------
 
-int trigger = 5;		
+int trigger = 5;
 
 Cue_Bed.present();         # instruction for 8 s
 
@@ -38,8 +37,8 @@ Cue_Bed.present();         # instruction for 8 s
 
 loop until (pulse_manager.main_pulse_count() >= trigger)
 	begin
-	end; 
- 
+	end;
+
 # -----------------------------------------------------------------
 # Begin Experiment
 # -----------------------------------------------------------------
@@ -51,42 +50,49 @@ loop				# Begin trial loop
 until
 	t > 80
 begin
-	# Select Jitter Time from available jitter times 
-	int jit_ind = random(1,jitters.count()); 
+	# Select Jitter Time from available jitter times
+	int jit_ind = random(1,jitters.count());
 	int jit = jitters[jit_ind];
 	# Set Jitter Time
 	stim_event.set_delta_time(jit);
 	string jitter_event_code = "jit_" + string(jit);
 	Vorb.set_event_code(jitter_event_code);
-	
+
+	# Select minimum full trial time = jitter + stimulus picture [2000ms]
+	int min_trial_time = jit + 2000;
+	# Set minimum full trial time
+	full_trial.set_duration(min_trial_time);
+
 	# Set Stimulus trial event code as filename & Set stimulus picture
 	# Get picture file name
 	string stimulus_fname = stimulus_bilder[bilder[t]].filename();
 	# Remove the directory
 	stimulus_fname = stimulus_fname.replace( stimulus_directory, "" );
 	stim_event.set_event_code(stimulus_fname);
-	# Set Stimulus picture
+	# Set Stimulus picture (and default picture as the same to ensure stimulus is
+	# always presented for at least 2000 ms)
 	stim_bild.set_part(1, stimulus_bilder[bilder[t]]);
-	
+	default.set_part(1, stimulus_bilder[bilder[t]]);
+
 	# Get Date and Time
 	string stim_cal = date();
 	string stim_clock = date_time("tt");
-	
-	### MAIN PRESENTATION COMMAND ###   
+
+	### MAIN PRESENTATION COMMAND ###
 	full_trial.present();
-	
+
 	# Get Button Press
 	int button_press = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count()).button();
 
 	# Get the correct button answer: 1 if alt, 2 if neu
-	# Record response 'alt' or 'neu' 
+	# Record response 'alt' or 'neu'
 	int correct_answer;
 	if (stimulus_bilder[bilder[t]].description() == "alt")then
 		correct_answer = 1;
 	elseif (stimulus_bilder[bilder[t]].description() == "neu")then
-		correct_answer = 2;	
+		correct_answer = 2;
 	end;
-	
+
 	# Determine Correct or Incorrect
 	int correct;
 	if (correct_answer == button_press) then
@@ -94,47 +100,47 @@ begin
 	else
 		correct = 0;
 	end;
-	
-	# Set rausschreib text & present rausschreib. pict_id must be used due to 
+
+	# Set rausschreib text & present rausschreib. pict_id must be used due to
 	# filename containing '_'.
-	string pict_id = stimulus_fname.replace( ".jpg", "" ); 
-	pict_id = pict_id.replace( ".png", "" ); 
-	pict_id = pict_id.replace( "_", "" ); 
-	
-	string schreib_code =	"B" + 
+	string pict_id = stimulus_fname.replace( ".jpg", "" );
+	pict_id = pict_id.replace( ".png", "" );
+	pict_id = pict_id.replace( "_", "" );
+
+	string schreib_code =	"B" +
 							"_pict_" + pict_id +
 							"_correctAns_" + string(correct_answer) +
-							"_button_" + string(button_press);							
+							"_button_" + string(button_press);
 	schreib.set_event_code(schreib_code);
 	rausschreib.present();
-	
+
 	# Get Stim Data for RT and approximate Stimulus Bild Presentation Time
 	stimulus_data stim_data = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count() - 1);
 
 	# Write Trial Data to Behavioral Log File
-	ofile.print("S2_Recognition_Pilot, " + 
-					logfile.subject() + ", " + 
-					string(run_nummer) + ", " + 
-					string(t) + ", " + 
-					stim_cal + ", " + 
-					stim_clock + ", " + 
-					stimulus_fname + ", " + 
+	ofile.print("S2_Recognition_Pilot, " +
+					logfile.subject() + ", " +
+					string(run_nummer) + ", " +
+					string(t) + ", " +
+					stim_cal + ", " +
+					stim_clock + ", " +
+					stimulus_fname + ", " +
 					string(stim_data.time() - 8000) + ", " +
 					"None" + ", " +
 					"NaN" + ", " +
-					string(correct_answer) + ", " + 
+					string(correct_answer) + ", " +
 					"None" + ", " +
 					"NaN" + ", " +
-					"NaN" + ", " + 
+					"NaN" + ", " +
 					"None" + ", " +
 					"NaN" + ", " +
 					string(button_press) + ", " +
-					string(correct) + ", " + 
+					string(correct) + ", " +
 					string(stim_data.reaction_time()) + "\n");
-					
+
 	t = t + 1; #iterate trial
 end;						# End Trial Loop #
-                    
-                                                              
+
+
 # Present fixation cross for 10 sec and say "Danke!"
 ende.present();
