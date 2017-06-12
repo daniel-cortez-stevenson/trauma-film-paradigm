@@ -1,5 +1,4 @@
-### Traumatic Film Pilot Presentation 
-### Last Edited: 07.03.2017
+### Traumatic Film Pilot Presentation
 ### Author: Daniel Cortez Stevenson
 ### Questions or comments? Contact: [daniel.stevenson@charite.de]
 
@@ -9,12 +8,12 @@ pcl_file = "S1_Filme_Pilot.pcl";
 
 #---- fmri header ------------
 
-# for simulation   
+# for simulation
 scenario_type = fMRI_emulation;
 scan_period = 2000;     # = TR
 
 # for in fMRI
-#scenario_type = fMRI;  
+#scenario_type = fMRI;
 pulses_per_scan = 1;
 pulse_code = 99;
 
@@ -28,24 +27,24 @@ default_background_color = 0, 0, 0;
 max_y = 100;
 
 
-begin;   
+begin;
 
 # Gleich Geht's Los and blank screen (default)
-picture {bitmap{ filename = "blank.jpg";			height = 200; scale_factor = scale_to_height;}; x = 0; y = 0;}default; 
-picture {bitmap{ filename = "instrukt.jpg";	height = 200; scale_factor = scale_to_height;}; x = 0; y = 0;}instruct; 
+picture {bitmap{ filename = "blank.jpg";			height = 200; scale_factor = scale_to_height;}; x = 0; y = 0;}default;
+picture {bitmap{ filename = "instrukt.jpg";	height = 200; scale_factor = scale_to_height;}; x = 0; y = 0;}instruct;
 
-# Video Stimulus 
+# Video Stimulus
 video {filename = "ptsd_filme_neu.avi"; x = 0; y = 0;}vid1;
 
 #######################################################################
 # Trials:
-trial {  
-   trial_duration = 7000;  
-   
-   stimulus_event{    
+trial {
+   trial_duration = 7000;
+
+   stimulus_event{
 		picture instruct;
 		time = 0;
-		code = "Bedingung"; 
+		code = "Bedingung";
 		duration = next_picture;
    }instruktion;
 
@@ -53,18 +52,18 @@ trial {
 
 trial {
 	trial_duration = stimuli_length;
-	
+
 	stimulus_event{
 		video vid1;
 		code = "vid1";
-		time= 0; 
+		time= 0;
 	}vid_stim;
 
-}main_video; 
+}main_video;
 
 trial {
 	trial_duration = 10000;
-	
+
 	stimulus_event{
 		picture default;
 		code = "blank_10sec";
@@ -72,20 +71,20 @@ trial {
 	};
 } blank_10;
 
-               
-trial { 
-   
+
+trial {
+
    trial_duration = 5000;
-      
-    picture {text 
+
+    picture {text
              {caption = "   E N D E!
-                    
+
     VIELEN DANK!";
               font_size = 20;
               font_color = 255, 255, 255; };
     x = 0; y = 0;
     };
-    
+
    time = 0;
    code = "Ende";
 

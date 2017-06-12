@@ -1,27 +1,26 @@
-### Traumatic Film Pilot Presentation 
-### Last Edited: 07.03.2017
+### Traumatic Film Pilot Presentation
 ### Author: Daniel Cortez Stevenson
 ### Questions or comments? Contact: [daniel.stevenson@charite.de]
 
 #-------------------------------------------------------------------
 
-int trigger = 5;	
+int trigger = 5;
 
- 
+
 Cue_Bed.present();         # instruction for 8 s
 
 #---- fmri wartet bis trigger = 5 (8 s) ------------
 
 loop until (pulse_manager.main_pulse_count() == trigger)
  begin
- end;     
+ end;
 
 #Double vid size
 vid1.prepare();
 vid1.set_size( vid1.width() * 1.8, vid1.height() * 1.8);
 
 ### Video Presentation ###
-main_video.present();    
+main_video.present();
 
 ### 10 second black screen ###
 blank_10.present();

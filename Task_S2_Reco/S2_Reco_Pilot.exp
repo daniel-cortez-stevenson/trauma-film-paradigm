@@ -1,5 +1,5 @@
 <ver>19</ver>
-<efn>Z:\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.exp</efn>
+<efn>\\Mac\Home\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.exp</efn>
 <author>Daniel Stevenson with support from Simone Kuehn, Dimitri Repantis, Katharina Wermuth, and Katharina Schmalen </author>
 <con>
 <pause>P</pause>
@@ -39,11 +39,11 @@
 <lfn></lfn>
 </docs>
 <dp_list></dp_list>
-<dsd>Z:\medneuro\repantis_lab\pilot_tasks\Task_Stimuli</dsd>
+<dsd>\\Mac\Home\medneuro\repantis_lab\pilot_tasks\Task_Stimuli</dsd>
 <dxv>8</dxv>
 <efs>
-<filename>Z:\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.sce</filename>
-<filename>Z:\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.pcl</filename>
+<filename>\\Mac\Home\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.sce</filename>
+<filename>\\Mac\Home\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.pcl</filename>
 </efs>
 <exclusive_mouse>1</exclusive_mouse>
 <exp_version>1</exp_version>
@@ -118,7 +118,7 @@
 <idt>0</idt>
 <ilc>0</ilc>
 <ip_chans></ip_chans>
-<lfd>Z:\medneuro\repantis_lab\pilot_tasks\Presentation_Log_Files</lfd>
+<lfd>\\Mac\Home\medneuro\repantis_lab\pilot_tasks\Presentation_Log_Files</lfd>
 <lnb>0</lnb>
 <lno>3</lno>
 <log>
@@ -424,16 +424,24 @@
 <dx_device_type>19</dx_device_type>
 <ibn>1</ibn>
 <ibn>2</ibn>
+<ibn>3</ibn>
+<ibn>4</ibn>
 <idn>Keyboard</idn>
 <index>0</index>
 <index>1</index>
+<index>2</index>
+<index>3</index>
+<label></label>
+<label></label>
 <label></label>
 <label></label>
 <offset>2</offset>
 <offset>3</offset>
+<offset>4</offset>
+<offset>5</offset>
 </idv>
 <overrides></overrides>
-<sfn>Z:\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.sce</sfn>
+<sfn>\\Mac\Home\medneuro\repantis_lab\pilot_tasks\Task_S2_Reco\S2_Reco_Pilot.sce</sfn>
 </sce>
 <sct>
 <capture_device>
