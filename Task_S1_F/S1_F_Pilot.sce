@@ -1,5 +1,4 @@
 ### Factual Pilot Experiment 
-### Last Edit: 07.03.2017
 ### Author: Daniel Cortez Stevenson
 ### Questions or comments? Contact: [daniel.stevenson@charite.de]
 
@@ -12,8 +11,8 @@ button_codes = 1, 2, 3, 4;
 
 ### Response Logging Options
 #no_logfile = true; #Turn on/off presentation log file creation.
-response_matching = simple_matching;    
-response_logging = log_active; 
+response_matching = simple_matching;
+response_logging = log_active;
 
 ### Monitor View Settings
 default_background_color = 0, 0, 0;
@@ -25,27 +24,27 @@ max_y = 100;
 
 # ---- fmri header ----
 
-# for simulation #   
+# for simulation #
 scenario_type = fMRI_emulation;
 scan_period = 2000;     # = TR
 
 # for fMRI #
-#scenario_type = fMRI;  
+#scenario_type = fMRI;
 
 # for both #
 pulses_per_scan = 1;
 pulse_code = 99;
 
-begin;   
+begin;
 
 # ---- Load Stimuli ----
 # Default image is Fixation Cross
 picture{bitmap{ filename = "fix.jpg";height = 200; scale_factor = scale_to_height;}; x = 0; y = 0;} default;	#fix
 
-# "Gleich Geht's Los" & Fixation Cross Screens   
-bitmap{ filename = "instrukt.jpg";	height = 200; scale_factor = scale_to_height;} 	instrukt;	#instructions	
+# "Gleich Geht's Los" & Fixation Cross Screens
+bitmap{ filename = "instrukt.jpg";	height = 200; scale_factor = scale_to_height;} 	instrukt;	#instructions
 bitmap{ filename = "fix.jpg";			height = 200; scale_factor = scale_to_height;}	fix;			#fixation cross
- 
+
 # Abfragen
 bitmap{ filename = "abfrage2_factual.jpg";	height = 200; scale_factor = scale_to_height;}	abfrage2;  	# Wie sicher sind Sie?
 bitmap{ filename = "abfrage2r_factual.jpg";height = 200; scale_factor = scale_to_height;}	abfrage2r; 	# Wie sicher sind Sie? (REVERSED)
@@ -265,17 +264,17 @@ array {
 # Trials
 # ------
 
-trial { 
+trial {
    trial_duration = 5000;
 
-   stimulus_event{		
+   stimulus_event{
 		picture {
 			bitmap instrukt;
 			x = 0; y = 0;
-		} ;	
+		} ;
 		time = 0;
 		code = "Bedingung";
-		duration = next_picture; 
+		duration = next_picture;
    } instruktion;
 
 } Cue_Bed;
@@ -283,23 +282,23 @@ trial {
 # TRIAL LOOP SCREENS
 trial {
 	all_responses = false;
-	
-	stimulus_event{       	
+
+	stimulus_event{
 		picture default;
 		time = 0;
-		duration = next_picture; 
+		duration = next_picture;
    } Vorb;
 
-	stimulus_event{  
+	stimulus_event{
 		picture {
 			bitmap fix;
 			x = 0; y = 0;
 		} stim_bild;
 		delta_time = 4000;
 		duration = next_picture;
-		code = "stimulus bild filename"; 
-   } stim_event;   
-   
+		code = "stimulus bild filename";
+   } stim_event;
+
 	stimulus_event{
 		picture {
 			bitmap fix;
@@ -308,12 +307,12 @@ trial {
 		delta_time = 3000;
 		code ="abfrage1";
 		duration = next_picture;
-   } ab1; 
-	
-	stimulus_event{       	
+   } ab1;
+
+	stimulus_event{
 		picture default;
 		delta_time = 3000;
-		duration = next_picture; 
+		duration = next_picture;
 		code = "fix_200";
    } ab_fix;
 
@@ -327,9 +326,9 @@ trial {
 		delta_time = 200;
 		code ="abfrage2/abfrage2r";
 		duration = response;
-   } ab2;  
-   
-   stimulus_event{  
+   } ab2;
+
+   stimulus_event{
 		picture {
 			bitmap fix;
 			x = 0; y = 0;
@@ -337,36 +336,36 @@ trial {
 		deltat = 0;
 		duration = 3000;
 		code = "feedback bild filename";
-   } feedback_event; 
-	
+   } feedback_event;
+
 } full_trial;
-   
+
 trial{
 	trial_duration = 1;
-	stimulus_event {  
+	stimulus_event {
       picture default;
       code = "rausschreib";
 		time = 0;
-      duration = next_picture; 
+      duration = next_picture;
 	} schreib;
-} rausschreib;  
-        
-# END OF EXPERIMENT SCREENS            
-trial { 
-   
-   stimulus_event{       	
+} rausschreib;
+
+# END OF EXPERIMENT SCREENS
+trial {
+
+   stimulus_event{
 		picture default;
 		time = 0;
-		duration = next_picture; 
+		duration = next_picture;
 		code = "ende_fixation";
    } ende_fix;
-   
-   stimulus_event{ 
+
+   stimulus_event{
 		picture {
 			text {
 				caption = "E N D E ! VIELEN DANK!";
 				font_size = 20;
-				font_color = 255, 255, 255; 
+				font_color = 255, 255, 255;
 			};
 			x = 0; y = 0;
 		} ende_text;
@@ -375,4 +374,4 @@ trial {
 		code = "ende_danke_screen";
    } ende_danke;
 
-} ende;  
+} ende;

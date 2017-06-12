@@ -6,12 +6,12 @@
 pcl_file = "S2_Reco_Pilot.pcl";
 
 ### Button Options
-active_buttons = 2;
-button_codes = 1, 2;
+active_buttons = 4;
+button_codes = 1, 2, 3, 4;
 
 ### Response Logging Options
 #no_logfile = true; #Turn on/off presentation log file creation.
-response_matching = simple_matching;
+response_matching = legacy_matching;
 response_logging = log_active;
 
 ### Monitor View Settings
@@ -45,6 +45,10 @@ picture{bitmap{ filename = "fix.jpg";height = 200; scale_factor = scale_to_heigh
 # Instructions, Fixation Cross, Blank, & Warning Screens
 bitmap{ filename = "recognition_instrukt.bmp"; height = 200; scale_factor = scale_to_height;} 	instrukt;	#instructions
 bitmap{ filename = "fix.jpg";			height = 200; scale_factor = scale_to_height;}	fix;			#fixation cross
+
+# Abfragen
+bitmap{ filename = "abfrage2_factual.jpg";	height = 200; scale_factor = scale_to_height;}	abfrage2;  	# Wie sicher sind Sie?
+bitmap{ filename = "abfrage2r_factual.jpg";height = 200; scale_factor = scale_to_height;}	abfrage2r; 	# Wie sicher sind Sie? (REVERSED)
 
 # Load Stimuli Bilder into a list.
 
@@ -159,8 +163,8 @@ trial {
 # TRIAL LOOP SCREENS
 trial {
 	all_responses = false;
-	trial_duration = 7000;
-
+	trial_type = all_correct_responses;
+	
 	stimulus_event{
 		picture {
 			bitmap fix;
@@ -178,18 +182,44 @@ trial {
 		response_active = true;
 		target_button = 1, 2;
 		delta_time = 5000;
-		duration = response;
+		duration = target_response;
 		code = "stimulus bild filename";
    } stim_event;
 
+  stimulus_event{
+	picture {
+		bitmap abfrage2;
+		x = 0; y = 0;
+	} ab2_bild;
+	response_active = true;
+	target_button = 1, 2, 3, 4;
+	time = 7000;
+	code ="abfrage2/abfrage2r";
+	duration = target_response;
+	} ab2;
+	
+	#only here to ensure the default picture does not flash between abfrage2 and fixation jitter
+	stimulus_event{
+		picture {
+			bitmap abfrage2;
+			x = 0; y = 0;
+		} transition_fix;
+	response_active = false;
+	duration = next_picture;
+	};
+	
+		
 } full_trial;
 
 trial{
 	trial_duration = 1;
 	stimulus_event {
-      picture default;
+      picture {
+			bitmap fix;
+			x = 0; y = 0;
+		} ;
       code = "rausschreib";
-		time = 0;
+		  time = 0;
       duration = next_picture;
 	} schreib;
 } rausschreib;

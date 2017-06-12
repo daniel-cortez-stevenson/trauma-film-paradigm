@@ -23,9 +23,10 @@ output_file ofile = new output_file;
 string ofilename = "../Behavioral_Log_Files/s2_recognition_pilot_" + logfile.subject() + ".csv";
 ofile.open(ofilename, file_append, true);
 ofile.print("Task_Name, VPN, Run, Trial, Date, Time, Stim_ID, " +
-				"Stim_Onset(ms_since_trigger), Q1_ID, Q1_Onset, Q1_Ans, " +
-				"Q2_ID, Q2_Onset, Q2_Rev, Feedback_ID, Feedback_Onset, " +
-				"Q2_Button, Correct, RT\n");
+				"Stim_Onset(ms_since_trigger), Stim_Alt=1_or_Neu=2, " +
+				"AltNeu_Button, AltNeu_Correct=1, AltNeu_RT, " +
+				"WieSicher_ID, WieSicher_Onset, WieSicher_Reversed=1, " +
+				"WieSicher_Button, WieSicher_Response, WieSicher_RT" + "\n");
 
 #---- fmri trigger setzen ---------------------------
 
@@ -58,10 +59,9 @@ begin
 	string jitter_event_code = "jit_" + string(jit);
 	Vorb.set_event_code(jitter_event_code);
 
-	# Select minimum full trial time = jitter + stimulus picture [2000ms]
+	# Select minimum time to Frag presentation = jitter + stimulus picture [2000ms]
 	int min_trial_time = jit + 2000;
-	# Set minimum full trial time
-	full_trial.set_duration(min_trial_time);
+	ab2.set_time(min_trial_time);
 
 	# Set Stimulus trial event code as filename & Set stimulus picture
 	# Get picture file name
@@ -74,6 +74,21 @@ begin
 	stim_bild.set_part(1, stimulus_bilder[bilder[t]]);
 	default.set_part(1, stimulus_bilder[bilder[t]]);
 
+	# Code 'Wie Sicher ...' Frag as 'reversed (1)' or 'normal (0)', and set
+	# Frag image.
+	int rev = random(0,1);
+	string abfrage2_fname;
+	if (rev == 0) then
+		abfrage2_fname = abfrage2.filename();
+		ab2_bild.set_part(1, abfrage2);
+	elseif (rev == 1) then
+		abfrage2_fname = abfrage2r.filename();
+		ab2_bild.set_part(1, abfrage2r);
+	end;
+	# Set abfrage 2 image
+	abfrage2_fname = abfrage2_fname.replace(stimulus_directory, "");
+	ab2.set_event_code(abfrage2_fname);
+
 	# Get Date and Time
 	string stim_cal = date();
 	string stim_clock = date_time("tt");
@@ -81,8 +96,9 @@ begin
 	### MAIN PRESENTATION COMMAND ###
 	full_trial.present();
 
-	# Get Button Press
-	int button_press = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count()).button();
+	# Get Button Presses
+	int button_press = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count() - 1).button();
+	int button_press_2 = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count()).button();
 
 	# Get the correct button answer: 1 if alt, 2 if neu
 	# Record response 'alt' or 'neu'
@@ -101,21 +117,48 @@ begin
 		correct = 0;
 	end;
 
-	# Set rausschreib text & present rausschreib. pict_id must be used due to
-	# filename containing '_'.
-	string pict_id = stimulus_fname.replace( ".jpg", "" );
-	pict_id = pict_id.replace( ".png", "" );
-	pict_id = pict_id.replace( "_", "" );
-
-	string schreib_code =	"B" +
-							"_pict_" + pict_id +
-							"_correctAns_" + string(correct_answer) +
-							"_button_" + string(button_press);
-	schreib.set_event_code(schreib_code);
-	rausschreib.present();
+	# Get Response value for "Wie Sicher ..." (reverse coding)
+	string abfrage2_resp;
+	if (rev == 0) then
+		abfrage2_resp = string(button_press_2);
+	elseif (rev == 1) then
+		abfrage2_resp = string(5 - button_press_2);
+	end;
 
 	# Get Stim Data for RT and approximate Stimulus Bild Presentation Time
 	stimulus_data stim_data = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count() - 1);
+	stimulus_data ab2_data = stimulus_manager.get_stimulus_data(stimulus_manager.stimulus_count());
+
+	# Set rausschreib text & present rausschreib. pict_id/ab_id must be used due
+	# to filenames containing '_'.
+	string pict_id = stimulus_fname.replace( ".jpg", "" );
+	pict_id = pict_id.replace( ".png", "" );
+	pict_id = pict_id.replace( "_", "" );
+	string ab2_id = abfrage2_fname.replace( ".jpg", "" );
+	ab2_id = ab2_id.replace( ".png", "" );
+	ab2_id = ab2_id.replace( "_", "" );
+
+	string schreib_code =	"B" +
+							"_pict_" +
+							logfile.subject() + "_" +
+							string(run_nummer) + "_" +
+							string(t) + "_" +
+							stim_cal + "_" +
+							stim_clock + "_" +
+							pict_id + "_" +
+							string(stim_data.time() - 8000) + "_" +
+							string(correct_answer) + "_" +
+							string(button_press) + "_" +
+							string(correct) + "_" +
+							string(stim_data.reaction_time()) + "_" +
+							ab2_id + "_" +
+							string(ab2_data.time() - 8000) + "_" +
+							string(rev) + "_" +
+							abfrage2_resp + "_" +
+							string(button_press_2) + "_" +
+							string(ab2_data.reaction_time());
+	schreib.set_event_code(schreib_code);
+	rausschreib.present();
 
 	# Write Trial Data to Behavioral Log File
 	ofile.print("S2_Recognition_Pilot, " +
@@ -126,17 +169,16 @@ begin
 					stim_clock + ", " +
 					stimulus_fname + ", " +
 					string(stim_data.time() - 8000) + ", " +
-					"None" + ", " +
-					"NaN" + ", " +
 					string(correct_answer) + ", " +
-					"None" + ", " +
-					"NaN" + ", " +
-					"NaN" + ", " +
-					"None" + ", " +
-					"NaN" + ", " +
 					string(button_press) + ", " +
 					string(correct) + ", " +
-					string(stim_data.reaction_time()) + "\n");
+					string(stim_data.reaction_time()) + ", " +
+					abfrage2_fname + ", " +
+					string(ab2_data.time() - 8000) + ", " +
+					string(rev) + ", " +
+					abfrage2_resp + ", " +
+					string(button_press_2) + ", " +
+					string(ab2_data.reaction_time()) + "\n");
 
 	t = t + 1; #iterate trial
 end;						# End Trial Loop #
